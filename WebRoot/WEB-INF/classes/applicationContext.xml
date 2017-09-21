@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!--*******************************************action层*********************************************-->
+	
+	<!-- UserAction userAction = new UserAction() -->
+	<bean id="userAction" class="com.ssh.action.UserAction">
+		<property name="userService" ref="userServiceImpl"/>
+		<property name="rightService" ref="rightServiceImpl"/>
+		<property name="belongservice" ref="belongservice"/>
+		<property name="areaservice" ref="areaservice"/>
+	</bean>
+	
+	<bean id="roleAction" class="com.ssh.action.RoleAction">
+		<property name="roleService" ref="roleServiceImpl"/>
+	</bean>
+	
+	<bean id="rightAction" class="com.ssh.action.RightAction">
+		<property name="rightService" ref="rightServiceImpl"/>
+	</bean>
+	
+	<bean id="tempAction" class="com.ssh.action.TempAction">
+	</bean>
+	
+	<!--*****************************************service层*********************************************-->
+	
+	<bean id="userServiceImpl" class="com.ssh.service.UserServiceImpl">
+		<property name="userDao" ref="userDaoImpl"/>
+	</bean>
+	
+	<bean id="roleServiceImpl" class="com.ssh.service.RoleServiceImpl">
+		<property name="roleDao" ref="roleDaoImpl"/>
+	</bean>
+	
+	<bean id="rightServiceImpl" class="com.ssh.service.RightServiceImpl">
+		<property name="rightDao" ref="rightDaoImpl"/>
+	</bean>
+	
+	<!--*******************************************dao层***********************************************-->
+   
+    <bean id="userDaoImpl" class="com.ssh3.orm.UserDAOImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="roleDaoImpl" class="com.ssh3.orm.RoleDAOImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+     <bean id="rightDaoImpl" class="com.ssh3.orm.RightDAOImpl">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="com.microsoft.sqlserver.jdbc.SQLServerDriver">
+		</property>
+		<property name="url"
+			value="jdbc:sqlserver://127.0.0.1:1433;databaseName=DemmandConnection">
+		</property>
+		<property name="username" value="sa"></property>
+		<property name="password" value="123"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.SQLServerDialect
+				</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/ssh/orm/SysRight.hbm.xml</value>
+				<value>com/ssh/orm/SysRole.hbm.xml</value>
+				<value>com/ssh/orm/TbAdministrator.hbm.xml</value>
+				<value>com/ssh/orm/Guanli.hbm.xml</value>
+				<value>com/ssh/orm/Reject.hbm.xml</value>
+				<value>com/ssh/orm/Subjecttype.hbm.xml</value>
+				<value>com/ssh/orm/TbGovBelong.hbm.xml</value>
+				<value>com/ssh/orm/TbNeed.hbm.xml</value>
+				<value>com/ssh/orm/TbNumber.hbm.xml</value>
+				<value>com/ssh/orm/TbArea.hbm.xml</value>
+				<value>com/ssh/orm/TbBelong.hbm.xml</value>
+				<value>com/ssh/orm/Xueke.hbm.xml</value></list>
+		</property></bean>
+		<!-- 需求填报                                                                  -->	
+	<bean id="needAct" class="com.ssh.action.needAction" scope="prototype">
+		<property name="needService" ref="needService"></property>
+		<property name="tbGovBelongService" ref="tbGovBelongService"></property>
+		<property name="guanliservice" ref="guanliservice"/>
+	</bean>
+	
+	<bean id="needService" class="com.ssh.service.needService">
+		<property name="need" ref="need"></property>
+	</bean>
+	
+	<bean id="need" class="com.ssh3.orm.needDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 审核需求管理                                                                   -->	
+	<bean id="tbGovBelongAct" class="com.ssh.action.tbGovBelongAction" scope="prototype">
+		<property name="tbGovBelongService" ref="tbGovBelongService"></property>
+	</bean>
+	
+	<bean id="tbGovBelongService" class="com.ssh.service.tbGovBelongService">
+		<property name="base" ref="base"></property>
+	</bean>
+	
+	<bean id="base" class="com.ssh3.orm.tbGovBelongDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 退回需求管理                                                                   -->	
+	<bean id="rejectAct" class="com.ssh.action.rejectAction" scope="prototype">
+		<property name="rejectService" ref="rejectService"></property>
+		<property name="tbGovBelongService" ref="tbGovBelongService"></property>
+	</bean>
+	
+	<bean id="rejectService" class="com.ssh.service.rejectService">
+		<property name="rebase" ref="rebase"></property>
+	</bean>
+	
+	<bean id="rebase" class="com.ssh3.orm.rejectDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 三级联动                                                                   -->
+	<bean id="classifyAction" class="com.ssh.action.ClassifyAction">
+		<property name="classifyservice" ref="classifyservice"/>
+	</bean>
+
+    <bean id="classifyservice" class="com.ssh.service.ClassifyService">
+		<property name="classify" ref="classify"/>
+	</bean>
+
+    <bean id="classify" class="com.ssh3.orm.ClassifyDAO">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- 下拉框显示                                                                -->
+
+    <bean id="guanliservice" class="com.ssh.service.GuanliService">
+		<property name="guanli" ref="guanli"/>
+	</bean>
+
+    <bean id="guanli" class="com.ssh3.orm.GuanliDao">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="belongservice" class="com.ssh.service.BelongService">
+		<property name="belong" ref="belong"/>
+	</bean>
+
+    <bean id="belong" class="com.ssh3.orm.BelongDao">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="areaservice" class="com.ssh.service.AreaService">
+		<property name="area" ref="area"/>
+	</bean>
+
+    <bean id="area" class="com.ssh3.orm.AreaDao">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- 形式审核需求管理                                                                   -->	
+	<bean id="demandAction" class="com.ssh.action.DemandAction" scope="prototype">
+		<property name="demandService" ref="demandService"></property>
+	</bean>
+	
+	<bean id="demandService" class="com.ssh.service.DemandServiceImpl">
+		<property name="demandDao" ref="demandDao"></property>
+	</bean>
+	
+	<bean id="demandDao" class="com.ssh3.orm.DemandDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	 <!-- 高级查询 分类检索                                                                   -->	
+	<bean id="SubjecttypeAction" class="com.ssh.action.SubjecttypeAction" scope="prototype">
+		<property name="typeservice" ref="typeService"></property>
+		<property name="needService" ref="needService"></property>
+	</bean>
+	
+	<bean id="typeService" class="com.ssh.service.SubjecttypeService">
+		<property name="industryDao" ref="industryDao"></property>
+	</bean>
+	
+	<bean id="industryDao" class="com.ssh3.orm.SubjecttypeDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+		</beans>

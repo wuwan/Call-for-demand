@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<!-- 把Struts的action交给spring托管 -->
+	<constant name="struts.objectFactory" value="spring"/>
+	<!-- 关闭动态链接 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<!-- 开发者模式 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 统一处理表单的主题样式 -->
+	<!-- struts.ui.theme=xhtml默认值 -->
+	<constant name="struts.ui.theme" value="simple" />
+
+<!--**************************************** 用户管理 ******************************************* -->
+	<package name="user" extends="struts-default">
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="success" type="redirect">/index_user.jsp</result>
+			<result name="input" type="redirect">/login.jsp</result>
+			<result name="regSuc" type="redirect">/login.jsp</result>
+			<result name="updateSuc" type="redirect">/users/editUser.jsp</result>	
+		</action>
+		<action name="showAlluser" class="userAction" method="showAlluser">
+		    <result name="success">/leftPages/showAlluser.jsp</result>
+		    <result name="error">/leftPages/showAlluser.jsp</result>
+		</action>
+		<action name="delete" class="userAction" method="doDelete" />
+		<action name="edit" class="userAction" method="doEdit">
+			<result name="editUser">/jsp/editUser.jsp</result>
+		</action>
+		
+		<!--用户密码修改  -->
+	   <action name="userEdit" class="userAction" method="douserEdit">
+	    <result name="editUser">/leftPages/open.html</result>
+	   </action>
+	   <!-- 注册界面 -->		
+		<action name="add" class="userAction" method="doAdd">
+			<result name="addUser">/regist.jsp</result>
+			<result name="success">/index.jsp</result>
+		</action>
+		
+		<action name="addUser" class="userAction" method="doAdd1">
+			<result name="add">/addUser.jsp</result>
+			<result name="success">/showAlluser.jsp</result>
+		</action>
+<!--**************************************** 公共界面 ******************************************* -->
+		<action name="temp_*" class="tempAction" method="{1}">
+			<result name="xtjs">/temp/xtjs.jsp</result>
+			<result name="tblc">/temp/tblc.jsp</result>
+			<result name="cjwt">/temp/cjwt.jsp</result>
+		</action>
+		
+<!--**************************************** 该用户名已注册 ****************************************-->	
+		<action name="checkName" class="userAction" method="textajax"></action>
+		<action name="menu" class="userAction" method="menu"></action>
+
+<!--**************************************** 用户角色管理 ****************************************-->	
+		<action name="showRole" class="roleAction" method="showRole">
+			<result name="showRole" type="dispatcher">/adminControl/showAllRole.jsp</result>
+		</action>
+		
+<!--**************************************** 用户权限管理 ****************************************-->	
+		<action name="showRight" class="rightAction" method="showRight">
+			<result name="showRight" type="dispatcher">/adminControl/showAllRight.jsp</result>
+		</action>
+	
+	<!-- 填写表格界面 -->		
+		<action name="needAdd" class="needAct" method="doneedAdd">
+			<result name="addNeed">/leftPages/2InsertNewFile.jsp</result>
+			<result name="needS">/leftPages/open.html</result>
+		</action>
+     <!-- 用户查询审核的界面 -->
+		
+		<action name="query1" class="tbGovBelongAct" method="doQuery1" >
+			<result name="success">/leftPages/Accept1.jsp</result>
+			<result name="error">/leftPages/Accept1.jsp</result>
+		</action>
+		
+	<!-- 用户查询退回的界面 -->
+		<action name="query2" class="rejectAct" method="doQuery" >
+			<result name="success">/leftPages/Reject.jsp</result>
+			<result name="error">/leftPages/Reject.jsp</result>
+		</action>
+		<action name="query3" class="rejectAct" method="doQuery1" >
+			<result name="success">/leftPages/Reject1.jsp</result>
+			<result name="error">/leftPages/Reject1.jsp</result>
+		</action>
+		<!--退回理由查看 -->
+	   <action name="causeSelect" class="rejectAct" method="docauseSelect">
+	    <result name="selectCause">/leftPages/cause_select.jsp</result>
+	   </action>
+	   
+	   
+	 <!--页面的查看信息  -->
+	   <action name="needSelect" class="needAct" method="doneedSelect">
+	    <result name="selectNeed">/leftPages/Select.jsp</result>
+	   </action>
+	 <!--页面的编辑信息  -->
+	   <action name="needEdit" class="needAct" method="doneedEdit">
+	    <result name="editNeed">/leftPages/Edit.jsp</result>
+	   </action>
+	   <action name="needUpdate" class="needAct" method="doneedUpdate">
+	    <result name="updateNeed">/leftPages/Accept1.jsp</result>
+	   </action>
+	   <action name="needDelete" class="needAct" method="doneedDelete">
+	    <result name="deleteNeed">/leftPages/Accept1.jsp</result>
+	   </action>
+	   
+		<!--从注册表中查询信息  -->
+		<action name="userquery5" class="userAction" method="douserQuery5">
+		    <result name="5">/leftPages/2InsertNewFile.jsp</result>
+		</action>
+		<action name="userquery6" class="userAction" method="douserQuery6">
+		    <result name="6">/leftPages/passUpdate.jsp</result>
+		</action>	
+		
+	<!-- 形式审核 -->
+	    <action name="query" class="demandAction" method="doQuery" >
+			<result name="doQuery">/leftPages/chaxun1.jsp</result>
+			<result name="error">/leftPages/chaxun1.jsp</result>
+		</action>
+		<!--页面的查看信息  -->
+	    <action name="selectFormat" class="needAct" method="doselectFormat">
+	        <result name="selectFormat">/leftPages/select_form1.jsp</result>
+	    </action>
+	    <!-- 审核 -->		
+		<action name="shenhe" class="tbGovBelongAct" method="doshenhe">
+			<result name="accept1">/leftPages/chaxun.jsp</result>
+			<result name="tuihui1">/leftPages/cause.jsp</result>
+		</action>
+		<action name="tuihui" class="rejectAct" method="dotuihui">
+			<result name="tuihui">/leftPages/chaxun.jsp</result>
+		</action>
+	<!-- 技术审核 -->
+		<!-- 用户查询审核的界面 -->
+		<action name="query5" class="tbGovBelongAct" method="doQuery3" >
+			<result name="success">/leftPages/technology.jsp</result>
+			<result name="error">/leftPages/technology.jsp</result>
+		</action>
+		<!--页面的查看信息  -->
+	    <action name="selectTechnology" class="needAct" method="doselectTechnology">
+	        <result name="selectTechnology">/leftPages/select_form2.jsp</result>
+	    </action>
+	    <!-- 审核 -->		
+		<action name="shenpi" class="tbGovBelongAct" method="doshenpi">
+			<result name="accept">/leftPages/technology.jsp</result>
+			<result name="tuihui">/leftPages/cause1.jsp</result>
+		</action>
+		<action name="tuihui1" class="rejectAct" method="dotuihui1">
+			<result name="tuihui2">/leftPages/technology.jsp</result>
+		</action>
+		
+		</package>
+     <!--                   三级联动                                -->	
+		<package name="ajax" extends="json-default">
+		<action name="Gm1" class="classifyAction" method="FirstGm">
+			<result name="Success" type="json"></result>
+		</action>
+		<action name="Gm2" class="classifyAction" method="SecondGm">
+			<result name="Success" type="json"></result>
+		</action>
+		<action name="Gm3" class="classifyAction" method="ThirdGm">
+			<result name="Success" type="json"></result>
+		</action>
+		
+		<action name="Classify1" class="classifyAction" method="FirstClassify">
+			<result name="Success" type="json"></result>
+		</action>
+		<action name="Classify2" class="classifyAction" method="SecondClassify">
+			<result name="Success" type="json"></result>
+		</action>
+		<action name="Classify3" class="classifyAction" method="ThirdClassify">
+			<result name="Success" type="json"></result>
+		</action>
+
+		<!-- 显示行业的分类信息 -->
+		<action name="SubjecttypeAction" class="SubjecttypeAction">
+			<result name="success">/admin/showAllRequirement.jsp</result>
+		</action>
+	</package>
+
+</struts>    
